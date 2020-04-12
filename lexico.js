@@ -123,7 +123,8 @@ function isCombo(z) {
 }
 
 function isReserved(z) {
-    var res = ["void"];
+    var res = ["void","int","string","double","char","bool","main","console","write",
+                "switch","case","break","default","for","while","do","return","continue"];
     var n = res.includes(z);
     return n;
 
