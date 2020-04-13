@@ -1,9 +1,10 @@
 function lex_x(cadena) {
     var letter = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-
+    
+    
     let ltt = require('./intern.js');
-    var c = "";
-    var v = "";
+    var c = '';
+    var v = '';
     var aux = "";
     var e = 0;
     var ln = 1;
@@ -16,19 +17,19 @@ function lex_x(cadena) {
         }
         switch (e) {
             case 0:
-                if (c == "/" && v == "/") {
+                if (c == '/' && v == '/') {
                     e = 1;  //ok
-                } else if (c == "/" && v == "*") {
+                } else if (c == '/' && v == '*') {
                     e = 2;  //ok
-                } else if (isLetter(c) || c == "_") {
+                } else if (isLetter(c) || c == '_') {
                     e = 3; //ok
                     aux += c;
                 } else if (isNum(c)) {
                     e = 4
                     aux += c;  //ok
-                } else if (c == "\"") {
+                } else if (c == '"') {
                     e = 7; //ok
-                } else if (c == "\'") {
+                } else if (c == '\'') {
                     e = 8 //ok
                 } else if (isSimbol(c)) {
                     //no cambia estado, solo declara
@@ -64,7 +65,7 @@ function lex_x(cadena) {
                 break;
 
             case 3:
-                if (isLetter(c) || c == "_" || isNum(c)) {
+                if (isLetter(c) || c == '_' || isNum(c)) {
                     aux += c;
                 } else {
                     if (isReserved(aux)) {
@@ -105,7 +106,7 @@ function lex_x(cadena) {
                 break;
 
             case 7:
-                if (c == "\"") {
+                if (c == '"') {
                     aux += c;
                 } else {
                     //reporta
@@ -117,7 +118,7 @@ function lex_x(cadena) {
                 break;
 
             case 8:
-                if (c == "\'") {
+                if (c == '\'') {
                     aux += c;
                 } else {
                     //reporta

@@ -24,22 +24,13 @@ app.get('/', function (req, res) {
 app.post('/', function (req, res) {
     var txt = req.body.texto;
     ix.start_all(txt);
-    res.render('index.ejs', {
-        super_s: txt
-    });
+    res.redirect('/compiled');
 });
 
-app.get('/tokens', function (req, res) {
-    res.render('view_tokens.ejs');
+app.get('/compiled', function (req, res) {
+    res.render('compiled.ejs');
 });
 
-app.get('/errores', function (req, res) {
-    res.render('index.ejs');
-});
-
-app.get('/final', function (req, res) {
-    res.render('index.ejs');
-});
 
 
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/w3.css" rel="stylesheet" type="text/css">
+    <title>C# to Python</title>
+</head>
+
+<body>
+    <div class="w3-top">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+            <a href="" class="w3-bar-item w3-button"><b>C#</b> / <b>Python</b></a>
+            <!-- Float links to the right. Hide them on small screens -->
+            <div class="w3-right w3-hide-small">
+                <a href="" class="w3-bar-item w3-button">Acerca de</a>
+                <a href="" class="w3-bar-item w3-button">Documentacion</a>
+                <a href="" class="w3-bar-item w3-button">Github</a>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+    <br>
+    <br>
+
+    <div class="w3-content w3-padding-48">
+        <h2>Resultado de la compilacion</h2>
+
+        <div class="w3-row">
+            <a href="javascript:void(0)" onclick="openCity(event, 'London');">
+                <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Tokens</div>
+            </a>
+            <a href="javascript:void(0)" onclick="openCity(event, 'Paris');">
+                <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Errores</div>
+            </a>
+            <a href="javascript:void(0)" onclick="openCity(event, 'Tokyo');">
+                <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Resultados</div>
+            </a>
+        </div>
+
+        <div id="London" class="w3-container city" style="display:none">
+            <h2>London</h2>
+            <p>London is the capital city of England.</p>
+        </div>
+
+        <div id="Paris" class="w3-container city" style="display:none">
+            <h2>Paris</h2>
+            <p>Paris is the capital of France.</p>
+        </div>
+
+        <div id="Tokyo" class="w3-container city" style="display:none">
+            <h2>Tokyo</h2>
+            <p>Tokyo is the capital of Japan.</p>
+        </div>
+    </div>
+
+
+    <script>
+        function openCity(evt, cityName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("city");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" w3-border-red", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.firstElementChild.className += " w3-border-red";
+        }
+    </script>
+
+
+</body>
+
+</html>
