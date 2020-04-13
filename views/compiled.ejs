@@ -51,13 +51,18 @@
                     <th>Linea</th>
                     <th>Columna</th>
                 </tr>
-                <tr>
-                    <td>Jill</td>
-                    <td>Smith</td>
-                    <td>50</td>
-                    <td>50</td>
-                    <td>50</td>
-                </tr>
+
+                <% tokens.forEach(function(token){ %>
+                    <tr>
+                        <td><%= token[0]%></td>
+                        <td><%= token[1]%></td>
+                        <td><%= token[2]%></td>
+                        <td><%= token[3]%></td>
+                        <td><%= token[4]%></td>
+                    </tr>
+
+                <% })%>
+                    
             </table>
         </div>
 

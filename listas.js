@@ -11,6 +11,11 @@ function add_token(tipo, valor, ln, cl) {
 
 }
 
+function ret_arr(){
+    let x=tkn;
+    return x;
+}
+
 function er_tokens(tipo, ln, cl, descrip) {
     var ebj = [err.length, tipo, ln + "", cl + "", descrip];
     err.push(ebj);
@@ -35,5 +40,6 @@ module.exports = {
     err,
     vrs,
     prt_tok,
-    cln
+    cln,
+    ret_arr
 };

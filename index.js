@@ -28,7 +28,11 @@ app.post('/', function (req, res) {
 });
 
 app.get('/compiled', function (req, res) {
-    res.render('compiled.ejs');
+    let tokk=ix.lst.ret_arr();
+
+    res.render('compiled.ejs',{
+        tokens : tokk
+    });
 });
 
 
