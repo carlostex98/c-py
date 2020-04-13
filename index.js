@@ -11,21 +11,21 @@ app.set('version', '1.0');
 app.set('port', '3000');
 app.set('view engine', 'ejs');
 
-let ix=require('./intern.js');
+let ix = require('./intern.js');
 
 
 //rutas
 app.get('/', function (req, res) {
-    res.render('index.ejs',{
-        super_s:null
+    res.render('index.ejs', {
+        super_s: null
     });
 });
 
-app.post('/',function(req, res){
+app.post('/', function (req, res) {
     var txt = req.body.texto;
     ix.start_all(txt);
-    res.render('index.ejs',{
-        super_s:txt
+    res.render('index.ejs', {
+        super_s: txt
     });
 });
 
