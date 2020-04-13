@@ -27,7 +27,7 @@ function lex_x(cadena) {
                 } else if (isNum(c)) {
                     e = 4
                     aux += c;  //ok
-                } else if (c == '"') {
+                } else if (c == '\"') {
                     e = 7; //ok
                 } else if (c == '\'') {
                     e = 8 //ok
@@ -37,9 +37,9 @@ function lex_x(cadena) {
                 } else if (isCombo(c + v)) {
                     //no cambia estado solo declara
                     ltt.lst.add_token("Simbolo n", aux, ln, cl);
-                } else if (c != '\r' && c != ' ' && c != '\t') {
+                } else if (c != '\n' && c != " " && c != "\t") {
                     //error
-                    /*console.log(c != "\r");
+                    /*console.log(c != '\n');
                     console.log(c != ' ');
                     console.log(c != '\t');*/
                     ltt.lst.er_tokens("lexico", ln, cl, "valor inesperado: " + c);
@@ -109,26 +109,29 @@ function lex_x(cadena) {
                 break;
 
             case 7:
-                if (c == '"') {
-                    aux += c;
-                } else {
+                if (c == '\"') {
                     //reporta
                     ltt.lst.add_token("Cadena", aux, ln, cl);
                     e = 0
-                    i--;
+                    
                     aux = "";
+                    
+                } else {
+                    aux += c;
                 }
                 break;
 
             case 8:
                 if (c == '\'') {
-                    aux += c;
-                } else {
-                    //reporta
                     ltt.lst.add_token("Cadena html", aux, ln, cl);
                     e = 0
-                    i--;
+                    
                     aux = "";
+
+                    
+                } else {
+                    //reporta
+                    aux += c;
                 }
                 break;
             default:
