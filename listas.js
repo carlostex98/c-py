@@ -17,7 +17,7 @@ function ret_arr(){
 }
 
 function er_tokens(tipo, ln, cl, descrip) {
-    var ebj = [err.length, tipo, ln + "", cl + "", descrip];
+    var ebj = [err.length+"", tipo, ln + "", cl + "", descrip];
     err.push(ebj);
 }
 
@@ -27,6 +27,12 @@ function prt_tok() {
 
     }
 }
+
+function ret_err(){
+    let x=err;
+    return x;
+}
+
 
 function cln() {
     tkn = [];
@@ -41,5 +47,6 @@ module.exports = {
     vrs,
     prt_tok,
     cln,
-    ret_arr
+    ret_arr,
+    ret_err
 };

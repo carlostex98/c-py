@@ -1,7 +1,7 @@
 function lex_x(cadena) {
     var letter = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    
-    
+
+
     let ltt = require('./intern.js');
     var c = '';
     var v = '';
@@ -10,10 +10,10 @@ function lex_x(cadena) {
     var ln = 1;
     var cl = 1;
     for (let i = 0; i < cadena.length; i++) {
-        c = cadena[i];
+        c = cadena.charAt(i);
 
         if (i != cadena.length - 1) {
-            v = cadena[i + 1];
+            v = cadena.charAt(i+1);
         }
         switch (e) {
             case 0:
@@ -37,8 +37,11 @@ function lex_x(cadena) {
                 } else if (isCombo(c + v)) {
                     //no cambia estado solo declara
                     ltt.lst.add_token("Simbolo n", aux, ln, cl);
-                } else if (c != "\\n" && c != " " && c != "\\t") {
+                } else if (c != '\r' && c != ' ' && c != '\t') {
                     //error
+                    /*console.log(c != "\r");
+                    console.log(c != ' ');
+                    console.log(c != '\t');*/
                     ltt.lst.er_tokens("lexico", ln, cl, "valor inesperado: " + c);
                 }
                 break;
@@ -132,12 +135,13 @@ function lex_x(cadena) {
                 break;
         }
 
+        cl++;
+        if (c == '\n') {
+            ln++;
+            cl = 1;
+        }
     }
-    cl++;
-    if (c == "\n") {
-        ln++;
-        cl = 1;
-    }
+
 
 }
 

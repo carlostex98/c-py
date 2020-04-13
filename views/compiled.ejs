@@ -67,8 +67,29 @@
         </div>
 
         <div id="Paris" class="w3-container city" style="display:none">
-            <h2>Paris</h2>
-            <p>Paris is the capital of France.</p>
+            <br>
+            <table class="w3-table w3-striped w3-border">
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Linea</th>
+                    <th>Columna</th>
+                    <th>Descripcion</th>
+                </tr>
+
+                <% errores.forEach(function(ert){ %>
+                    <tr>
+                        <td><%= ert[0]%></td>
+                        <td><%= ert[1]%></td>
+                        <td><%= ert[2]%></td>
+                        <td><%= ert[3]%></td>
+                        <td><%= ert[4]%></td>
+                    </tr>
+
+                <% })%>
+                    
+            </table>
+            
         </div>
 
         <div id="Tokyo" class="w3-container city" style="display:none">

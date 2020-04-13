@@ -29,9 +29,11 @@ app.post('/', function (req, res) {
 
 app.get('/compiled', function (req, res) {
     let tokk=ix.lst.ret_arr();
+    let erx=ix.lst.ret_err();
 
     res.render('compiled.ejs',{
-        tokens : tokk
+        tokens : tokk,
+        errores: erx
     });
 });
 
