@@ -12,6 +12,7 @@ function start_all(to_compile) {
 
 function replace_x(cadena){
     var n = cadena.replace('\r','\n');
+    return n;
 }
 
 module.exports = { lex, lst, sintax, start_all };

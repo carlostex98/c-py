@@ -1,26 +1,34 @@
 function lex_x(cadena) {
-    var letter = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-
-
     let ltt = require('./intern.js');
     var c = '';
     var v = '';
     var aux = "";
     var e = 0;
     var ln = 1;
-    var cl = 1;
+    var cl = 0;
+    var y = 0;
+    var b = "";
     for (let i = 0; i < cadena.length; i++) {
         c = cadena.charAt(i);
 
         if (i != cadena.length - 1) {
-            v = cadena.charAt(i+1);
+            v = cadena.charAt(i + 1);
         }
+        cl++;
+        b = (c + "").concat(v + "") + "";
         switch (e) {
             case 0:
+                /*if (b == ">=") {
+                    console.log(b);
+                    console.log(isCombo(b));
+                }*/
+
                 if (c == '/' && v == '/') {
+
                     e = 1;  //ok
                 } else if (c == '/' && v == '*') {
                     e = 2;  //ok
+
                 } else if (isLetter(c) || c == '_') {
                     e = 3; //ok
                     aux += c;
@@ -33,22 +41,34 @@ function lex_x(cadena) {
                     e = 8 //ok
                 } else if (isSimbol(c)) {
                     //no cambia estado, solo declara
-                    ltt.lst.add_token("Simbolo", c, ln, cl);
-                } else if (isCombo(c + v)) {
-                    //no cambia estado solo declara
-                    ltt.lst.add_token("Simbolo n", aux, ln, cl);
-                } else if (c != '\n' && c != " " && c != "\t") {
-                    //error
-                    /*console.log(c != '\n');
-                    console.log(c != ' ');
-                    console.log(c != '\t');*/
+                    if (isCombo(b)) {
+                        ltt.lst.add_token("Simbolo combo", c.concat(v), ln, cl);
+                        i++;
+                        cl++;
+                    } else {
+                        ltt.lst.add_token("Simbolo", c, ln, cl);
+                    }
+                } else if (c != '\n' && c != " " && c != "\t" && c != '\r') {
+                    
                     ltt.lst.er_tokens("lexico", ln, cl, "valor inesperado: " + c);
+                } else {
+
+                    if (c == '\n' || c == '\r') {
+
+                        if (y == 0) {
+                            y = 1;
+                        } else {
+                            ln++;
+                            cl = 1;
+                            y = 0;
+                        }
+                    }
                 }
                 break;
 
             case 1:
-                if (c == "\n") {
-                    ltt.lst.add_token("Comentario", aux, ln, cl);
+                if (c == '\n' || c != '\r') {
+                    ltt.lst.add_token("Comentario", aux, ln, cl - aux.length - 2);
                     aux = "";
                     e = 0;
                 } else {
@@ -58,7 +78,7 @@ function lex_x(cadena) {
 
             case 2:
                 if (c == "*" && v == "/") {
-                    ltt.lst.add_token("Comentario", aux, ln, cl);
+                    ltt.lst.add_token("Comentario", aux, ln, cl - aux.length - 4);
                     aux = "";
                     e = 0;
                 } else {
@@ -72,12 +92,13 @@ function lex_x(cadena) {
                     aux += c;
                 } else {
                     if (isReserved(aux)) {
-                        ltt.lst.add_token("Reservada", aux, ln, cl);
+                        ltt.lst.add_token("Reservada", aux, ln, cl - aux.length);
                     } else {
-                        ltt.lst.add_token("Identificador", aux, ln, cl);
+                        ltt.lst.add_token("Identificador", aux, ln, cl - aux.length);
                     }
                     e = 0
                     i--;
+                    cl--;
                     aux = "";
                 }
                 break;
@@ -89,9 +110,10 @@ function lex_x(cadena) {
                     e = 5;
                     aux += c;
                 } else {
-                    ltt.lst.add_token("Numero", aux, ln, cl);
+                    ltt.lst.add_token("Numero", aux, ln, cl - aux.length);
                     e = 0
                     i--;
+                    cl--;
                     aux = "";
                 }
                 break;
@@ -101,9 +123,10 @@ function lex_x(cadena) {
                     aux += c;
 
                 } else {
-                    ltt.lst.add_token("Numero", aux, ln, cl);
+                    ltt.lst.add_token("Numero", aux, ln, cl - aux.length);
                     e = 0
                     i--;
+                    cl--;
                     aux = "";
                 }
                 break;
@@ -111,11 +134,11 @@ function lex_x(cadena) {
             case 7:
                 if (c == '\"') {
                     //reporta
-                    ltt.lst.add_token("Cadena", aux, ln, cl);
+                    ltt.lst.add_token("Cadena", aux, ln, cl - aux.length - 2);
                     e = 0
-                    
+
                     aux = "";
-                    
+
                 } else {
                     aux += c;
                 }
@@ -123,12 +146,12 @@ function lex_x(cadena) {
 
             case 8:
                 if (c == '\'') {
-                    ltt.lst.add_token("Cadena html", aux, ln, cl);
+                    ltt.lst.add_token("Cadena html", aux, ln, cl - aux.length - 2);
                     e = 0
-                    
+
                     aux = "";
 
-                    
+
                 } else {
                     //reporta
                     aux += c;
@@ -138,11 +161,7 @@ function lex_x(cadena) {
                 break;
         }
 
-        cl++;
-        if (c == '\n') {
-            ln++;
-            cl = 1;
-        }
+
     }
 
 
@@ -168,7 +187,7 @@ function isSimbol(z) {
 
 function isCombo(z) {
     var combo = ["&&", "!=", "||", ">=", "<=", "++", "--", "=="];
-    var n = combo.includes(z);
+    var n = combo.includes(z + "");
     return n;
 }
 
