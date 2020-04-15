@@ -1,11 +1,11 @@
 //start dintactivo
-let vars[];
-function start_x(){
+let vars = [];
+function start_x() {
 
 }
 
 
-module.exports={
+module.exports = {
     start_x,
     vars
 };
