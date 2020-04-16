@@ -1,7 +1,40 @@
 //start dintactivo
-let vars = [];
-function start_x() {
 
+let vars = [];
+let tokx = [];
+
+var t = 0;
+function main_x() {
+    fill_arr();
+
+}
+//analizador
+
+function i(){
+    
+}
+
+
+
+
+//fin analizador
+
+
+
+
+function fill_arr(){
+    let x = require('./intern.js');
+    tokx = x.lst.ret_arr();
+    t=0;
+}
+
+function ret_curr(){
+    return tokx[t];
+}
+
+function nxt(){
+    t++;
+    return tokx[t];
 }
 
 

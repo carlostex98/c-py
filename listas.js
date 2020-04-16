@@ -7,7 +7,7 @@ let vrs = [];
 function add_token(tipo, valor, ln, cl) {
     const e = tkn.length + "";
     var ebj = [e, tipo, valor, ln + "", cl + ""];
-    tkn.push(ebj);
+    tkn.push(ebj); 
 
 }
 
