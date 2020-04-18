@@ -7,6 +7,7 @@ let ht = [];
 var t = 0;
 function main_x() {
     fill_arr();
+    i();
 
 }
 //analizador
@@ -19,7 +20,7 @@ function i() {
             resto();
         } else if (isType(x[2])) {
             nxt();
-            resto_2();
+            resto_2();//con return
         } else {
             //run panic, {
             runPanic("{");
@@ -64,12 +65,14 @@ function resto() {
         if (ret_curr()[2] == "(") {
             nxt();
             params();
+            nxt();
             if (ret_curr()[2] == ")") {
                 nxt();
                 if (ret_curr()[2] == "{") {
                     //llama sentencias
                     nxt();
                     sentencias();
+                    nxt();
 
                     if (ret_curr()[2] == "}") {
                         nxt();
@@ -101,13 +104,14 @@ function resto_2() {
         if (ret_curr()[2] == "(") {
             nxt();
             params();
+            nxt();
             if (ret_curr()[2] == ")") {
                 nxt();
                 if (ret_curr()[2] == "{") {
                     //llama sentencias
                     nxt();
                     sentencias();
-
+                    nxt();
                     if (ret_curr()[2] == "}") {
                         nxt();
                         i();
@@ -144,23 +148,129 @@ function sentencias() {
     * 
     * 
     */
+
+    if (ret_curr()[2] != "}") {
+        if (ret_curr()[2] == "if") {
+            nxt();
+            if (ret_curr()[2] == "(") {
+                nxt();
+                cond_f2();
+                nxt();
+                if (ret_curr()[2] == ")") {
+                    nxt();
+                    if (ret_curr()[2] == "{") {
+                        nxt();
+                        sentencias();
+                        nxt();
+                        if (ret_curr()[2] == "}") {
+                            nxt();
+                           //cond_f2();
+                        } else {
+                            runPanic("}");
+                        }
+                    } else {
+                        runPanic();
+                    }
+                } else {
+                    runPanic("{");
+                }
+            } else {
+                runPanic(")");
+            }
+
+        } else if (ret_curr()[2] == "switch") {
+
+        } else if (ret_curr()[2] == "for") {
+
+        } else if (ret_curr()[2] == "while") {
+
+        } else if (ret_curr()[2] == "do") {
+
+        } else if (ret_curr()[2] == "Console") {
+
+        } else if (isType(ret_curr()[2])) {
+            //dec de var
+
+        } else if (ret_curr()[1] == "Identificador") {
+            //run method or variable definition
+        } else {
+            //specialpanic
+        }
+    }
+
+
+
 }
 
-function sentencias_func(){
+function cond() {
 
 }
 
-function sentencias_sw(){
+function cond_f2() {
+
+    if(e1()){
+        nxt();
+        if(combo_c()){
+            nxt();
+            if(e1()){
+
+            }
+        }else{
+            runPanic(")");
+        }
+    }else{
+        runPanic(")");
+    }
+}
+
+function combo_c(){
+    var combo = ["&&", "!=", "||", ">=", "<=", ">", "<", "=="];
+    var n = combo.includes(z + "");
+    return n;
+}
+
+function e1() {
+    var e = ret_curr();
+    var u = false;
+    if (e[1] == "Identificador") {
+        u=true;
+        //nxt();
+        if(calc_nxt()[2]=="("){
+            nxt();
+            //llamar params especiales
+            if(ret_curr()[2]==")"){
+                u=true;
+            }else{
+                runPanic();
+            }
+        }else{
+            //runPanic("");
+            //reporta pero sin panico
+        }
+    } else if (e[1] == "Numero") {
+        u=true;
+    } else if (e[1] == "Cadena 1" || e[1] == "Cadena 1") {
+        u=true;
+    }
+    return u;
+}
+
+
+function sentencias_func() {
 
 }
 
-function sentencias_ciclo(){
-    
+function sentencias_sw() {
+
+}
+
+function sentencias_ciclo() {
+
 }
 
 
 function params() {
-    if (calc_nxt()[2] != ")") {//puede que exista sin parametros
+    if (ret_curr()[2] != ")") {//puede que exista sin parametros
         if (isType(ret_curr[2])) {
             nxt();
             if (ret_curr() == "Identificador") {
@@ -177,8 +287,9 @@ function params() {
 }
 
 function otros_params() {
-    if (calc_nxt()[2] != ")") {//epsilon
+    if (ret_curr()[2] != ")") {//epsilon
         if (ret_curr() == ",") {
+            nxt();
             params();
         } else {
             runPanic(")");
@@ -207,6 +318,7 @@ function isComboAu(z) {
 function runPanic(delim) {
     let c = ret_curr();
     while (true) {
+        c = ret_curr();
         if (c[2] == "delim") {
             break;
         } else {

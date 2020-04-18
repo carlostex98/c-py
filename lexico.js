@@ -134,7 +134,7 @@ function lex_x(cadena) {
             case 7:
                 if (c == '\"') {
                     //reporta
-                    ltt.lst.add_token("Cadena", aux, ln, cl - aux.length - 2);
+                    ltt.lst.add_token("Cadena 1", aux, ln, cl - aux.length - 2);
                     e = 0
 
                     aux = "";
@@ -146,7 +146,7 @@ function lex_x(cadena) {
 
             case 8:
                 if (c == '\'') {
-                    ltt.lst.add_token("Cadena html", aux, ln, cl - aux.length - 2);
+                    ltt.lst.add_token("Cadena 2", aux, ln, cl - aux.length - 2);
                     e = 0
 
                     aux = "";
