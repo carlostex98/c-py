@@ -4,9 +4,44 @@ let vars = [];
 let tokx = [];
 let ht = [];
 
+var a = "";
+var b = "";
+var c = "";
+
+var py =[];
+//varx para traduccion
+var tmp="";
+var ident="";
+var h=0;
+
+function ilx(){
+    for (let i = 0; i < 5; i++) {
+        h++;
+        ident+=" ";
+    }
+}
+function cln(){
+    h=0;
+    ident="";
+    for (let i = 0; i < h-5; i++) {
+        h++;
+        ident+=" ";
+    }
+}
+
+function sum(f){
+    tmp+=f;
+}
+
+function adl(){
+    var pu=ident+tmp;
+    py.push("pu");
+}
+
 var t = 0;
 function main_x() {
     fill_arr();
+    rec_html();
     i();
 
 }
@@ -15,10 +50,12 @@ function main_x() {
 function i() {
     if (t != tokx.length - 1) {
         let x = ret_curr();
-        if (x[2] == "void") {
+        if (x[2] == "void ") {
+            sum("def");
             nxt();
             resto();
         } else if (isType(x[2])) {
+            sum("def");
             nxt();
             resto_2();//con return
         } else {
@@ -32,17 +69,23 @@ function i() {
 function resto() {
     let a = ret_curr();
     if (a[2] == "main") {
+        sum("main ");
         nxt();
         if (ret_curr()[2] == "(") {
+            sum("(");
             nxt();
             if (ret_curr()[2] == ")") {
+                sum("):");
+                adl();
+                ilx();
                 nxt();
                 if (ret_curr()[2] == "{") {
                     //llama sentencias
                     nxt();
-                    sentencias();
+                    sentencias(0, 0);
 
                     if (ret_curr()[2] == "}") {
+                        cln();
                         nxt();
                         i();
                     } else {
@@ -51,7 +94,7 @@ function resto() {
                         i();
                     }
                 } else {
-
+                    runPanic("}");
                 }
             } else {
                 runPanic("{");
@@ -60,22 +103,28 @@ function resto() {
             runPanic("{");
         }
 
-    } else if (a[1] == "Identificador") {
+    } else if (a[1] == "Identificador") {// void nombre
+        sum(a[1]);
         nxt();
         if (ret_curr()[2] == "(") {
+            sum(" (");
             nxt();
             params();
-            nxt();
+            //nxt();
             if (ret_curr()[2] == ")") {
+                sum("):");
+                adl();
+                ilx();
                 nxt();
                 if (ret_curr()[2] == "{") {
                     //llama sentencias
                     nxt();
                     sentencias();
-                    nxt();
+                    //nxt();
 
                     if (ret_curr()[2] == "}") {
                         nxt();
+                        cln();
                         i();
                     } else {
                         //no lleva panico, pero reporta el errorcillo
@@ -100,19 +149,25 @@ function resto() {
 function resto_2() {
     let a = ret_curr();
     if (a[1] == "Identificador") {
+        sum(a[1]);
         nxt();
         if (ret_curr()[2] == "(") {
+            sum(" (");
             nxt();
             params();
             nxt();
             if (ret_curr()[2] == ")") {
+                sum("):");
+                adl();
                 nxt();
                 if (ret_curr()[2] == "{") {
                     //llama sentencias
+                    ilx();
                     nxt();
-                    sentencias();
-                    nxt();
+                    sentencias(1, 0);
+                    //nxt();
                     if (ret_curr()[2] == "}") {
+                        cln();
                         nxt();
                         i();
                     } else {
@@ -133,7 +188,7 @@ function resto_2() {
 }
 
 
-function sentencias() {
+function sentencias(n, m) {
     /*
     *Opciones:
     *if
@@ -151,20 +206,27 @@ function sentencias() {
 
     if (ret_curr()[2] != "}") {
         if (ret_curr()[2] == "if") {
+            
             nxt();
             if (ret_curr()[2] == "(") {
+                sum("if (");
                 nxt();
                 cond_f2();
-                nxt();
+                //nxt();
                 if (ret_curr()[2] == ")") {
+                    sum(" ):");
                     nxt();
                     if (ret_curr()[2] == "{") {
+                        adl();
+                        ilx();
                         nxt();
-                        sentencias();
-                        nxt();
+                        sentencias(n, m);
+                        //nxt();
                         if (ret_curr()[2] == "}") {
+                            cln();
                             nxt();
-                           //cond_f2();
+                            //cond_f2();
+                            if_ext();
                         } else {
                             runPanic("}");
                         }
@@ -179,51 +241,503 @@ function sentencias() {
             }
 
         } else if (ret_curr()[2] == "switch") {
-
+            nxt();
+            if (ret_curr()[2] == "(") {
+                nxt();
+                if (ret_curr()[1] == "Identificador") {
+                    var a1=ret_curr()[2];
+                    nxt();
+                    if (ret_curr()[2] == ")") {
+                        nxt();
+                        sum("def switch("+a1+"):");
+                        adl();
+                        if (ret_curr()[2] == "{") {
+                            ilx();
+                            sum("switcher = {");
+                            adl();
+                            ilx();
+                            nxt();
+                            sentencias_sw();
+                            if (ret_curr()[2] == "}") {
+                                cln();
+                                sum("}");
+                                adl();
+                                
+                                cln();
+                                nxt();
+                                sentencias();
+                            } else {
+                                runPanic("}");
+                            }
+                        } else {
+                            runPanic("}");
+                        }
+                    } else {
+                        runPanic("}");
+                    }
+                } else {
+                    runPanic("}");
+                }
+            } else {
+                runPanic("}");
+            }
         } else if (ret_curr()[2] == "for") {
+            nxt();
+            if (ret_curr()[2] == "(") {
+                sum("for ");
+                nxt();
+                if (isType(ret_curr()[1])) {
+                    nxt();
+                    if(ret_curr()[1]=="Identificador"){
+                        sum(ret_curr()[2]);
+                    }else{
+                        runPanic("}");
+                    }
+                    if (ret_curr()[2] == "=") {
+                        nxt();
+                        asignacion(";");
+                        if (ret_curr()[2] == ";") {
+                            nxt();
+                            sum(" in range( ");
+                            cond_f2();//suma coond
+                            if (ret_curr()[2] == ";") {
+                                nxt();
+                                asignacion(";");
+                                if (ret_curr()[2] == ")") {
+                                    sum(" ): ");
+                                    nxt();
+                                    if (ret_curr()[2] == "{") {
+                                        adl();
+                                        ilx();
+                                        nxt();
+                                        sentencias(n, 1);
+                                        if (ret_curr()[2] == "}") {
+                                            nxt();
+                                            cln();
+                                            sentencias(n, m);
+                                        } else {
+                                            runPanic("}");
+                                        }
+                                    } else {
+                                        runPanic("}");
+                                    }
 
+                                } else {
+                                    runPanic("}");
+                                }
+
+                            } else {
+                                runPanic("}");
+                            }
+                        } else {
+                            runPanic("}");
+                        }
+                    } else {
+                        runPanic("}");
+                    }
+
+
+                } else {
+                    runPanic("}");
+                }
+
+
+            } else {
+                runPanic("}");
+            }
         } else if (ret_curr()[2] == "while") {
+            nxt();
+            if (ret_curr()[2] == "(") {
+                sum("while ( ")
+                nxt();
+                cond_f2();
+                if (ret_curr()[2] == ")") {
+                    nxt();
+                    sum("): ");
+                    adl();
+                    ilx();
+                    if (ret_curr()[2] == "{") {
+                        nxt();
+                        sentencias(n, 1);
+                        if (ret_curr()[2] == "}") {
+                            nxt();
+                            cln();
+                            sentencias(n, m);
+                        } else {
+                            runPanic("}");
+                        }
+                    } else {
+                        runPanic("}");
+                    }
+                } else {
+                    runPanic("}");
+                }
+            } else {
+                runPanic("}");
+            }
 
         } else if (ret_curr()[2] == "do") {
+            nxt();
+            if (ret_curr()[2] == "{") {
+                nxt();
+                sum("while(true):");
+                adl();
+                ilx();
+                sentencias(n, 1);
+                if (ret_curr()[2] == "}") {
+                    nxt();
+                    if (ret_curr()[2] == "while") {
+                        nxt();
+                        if (ret_curr()[2] == "(") {
+                            nxt();
+                            sum("if( ")
+                            cond_f2();
+                            sum(" ):")
+                            adl();
+
+                            ilx();
+                            sum("break");
+                            adl();
+                            cln();
+                            if (ret_curr()[2] == ")") {
+                                nxt();
+                                sentencias(n, m);
+                            } else {
+                                runPanic(")");
+                            }
+                        } else {
+                            runPanic(")");
+                        }
+                    } elserunPanic(")");
+                } else {
+                    runPanic(")");
+                }
+            } else {
+                runPanic(")");
+            }
 
         } else if (ret_curr()[2] == "Console") {
+            nxt();
+            if (ret_curr()[2] == ".") {
+                nxt();
+                if (ret_curr()[2] == "write") {
+                    nxt();
+                    if (ret_curr()[2] == "(") {
+                        nxt();
+                        sum("print( ");
+                        asignacion(")");
+                        if (ret_curr()[2] == ")") {
+                            nxt();
+                            if (ret_curr()[2] == ";") {
+                                sum(")");
+                                adl();
+                                nxt();
+                                sentencias(n, m);
+                            } else {
+                                runPanic("}");
+                            }
+                        } else {
+                            runPanic("}");
+                        }
+                    } else {
+                        runPanic("}");
+                    }
+                } else {
+                    runPanic("}");
+                }
+            } else {
+                runPanic("}");
+            }
 
         } else if (isType(ret_curr()[2])) {
             //dec de var
+            var w = ret_curr()[2];
+            b = w;
+            nxt();
+            if (ret_curr()[1] == "Identificador") {
+                //crea var
+                a = ret_curr()[1];
+                nxt();
+                if (v2(w)) {
+                    nxt();
+                    asignacion(";");
+                    if (ret_curr()[2] == ";") {
+                        nxt();
+                        sentencias(n, m);
+                    } else {
+                        runPanic("}");
+                    }
+                } else {
+                    runPanic(";");
+                }
+
+
+
+            } else {
+                runPanic(";");
+            }
 
         } else if (ret_curr()[1] == "Identificador") {
             //run method or variable definition
+            nxt();
+            if (ret_curr()[2] == "=") {
+                nxt();
+                asignacion(";");
+                if (ret_curr()[2] == ";") {
+                    nxt();
+                    sentencias(n, m);
+                } else {
+                    runPanic("}");
+                }
+
+            } else if (ret_curr()[2] == "(") {
+                nxt();
+                p_func(")");
+                if (ret_curr()[2] == ")") {
+                    nxt();
+                    if (ret_curr()[2] == ";") {
+                        nxt();
+                        sentencias(n, m);
+                    } else {
+                        runPanic("}")
+                    }
+                } else {
+                    runPanic("}")
+                }
+
+            } else {
+                runPanic("}")
+            }
+
+
+        } else if (n == 1 || m == 1) {
+
+            if (n1 == 1) {
+                if (ret_curr()[2] == "return") {
+                    nxt();
+                    asignacion(";");
+                    if (ret_curr()[2] == ";") {
+                        nxt();
+                        sentencias(n, m);
+                    } else {
+                        //specialpanic
+                        runPanic("}");
+                    }
+                }
+            }
+            if (m == 1) {
+                if (ret_curr()[2] == "break") {
+                    nxt();
+                    if (ret_curr()[2] == ";") {
+                        nxt();
+                        sentencias(n, m);
+                    } else {
+                        //specialpanic
+                        runPanic("}");
+                    }
+
+                } else if (ret_curr()[2] == "continue") {
+                    nxt();
+                    if (ret_curr()[2] == ";") {
+                        nxt();
+                        sentencias(n, m);
+                    } else {
+                        //specialpanic
+                        runPanic("}");
+                    }
+                } if (ret_curr()[2] == ";") {
+                    nxt();
+                    sentencias(n, m);
+                }
+            }
+
         } else {
             //specialpanic
+            runPanic("}");
         }
     }
-
-
-
 }
 
-function cond() {
+function v2(n) {
+    if (ret_curr()[2] == ",") {
+        c = ret_curr()[3];
+        ap_var(a, b, c);
+        nxt();
+        if (ret_curr()[1] == "Identificador") {
+            //use n
+            a = ret_curr()[1];
+            nxt();
+            let f = v2(n);
+        } else {
+            return false;
+        }
+    } else if (ret_curr()[2] == "=") {
+        c = ret_curr()[3];
+        ap_var(a, b, c);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function p_func(c) {
+    if (ret_curr()[2] != c) {
+        asignacion(",");
+        nxt();
+        v5(c);
+    }
+}
+function v5(k) {
+    if (ret_curr()[2] != k) {
+        nxt();
+        if (ret_curr()[2] == ",") {
+            nxt();
+            p_func(k);
+        } else {
+            runPanic(")");
+        }
+    }
+}
+
+function asignacion(s) {
+    if (ret_curr()[2] != s) {
+        if (ret_curr()[1] == "Identificador") {
+            nxt();
+            if (ret_curr()[2] == "(") {
+                //call paraotro
+
+                nxt();
+                p_func(")");
+                if (ret_curr()[2] == ")") {
+                    nxt();
+                    otra_asig(s);
+                } else {
+                    runPanic(s);
+                }
+            } else {
+                otra_asig(s);
+            }
+        } else if (ret_curr()[1] = "Numero") {
+            nxt();
+            otra_asig(s);
+        } else if (ret_curr()[1] = "Cadena 1") {
+            nxt()
+            otra_asig(s);
+        } else if (ret_curr()[1] = "Cadena 2") {
+            nxt();
+            otra_asig(s);
+            //suma al html si y solo si la longitud no es (1)
+        } else {
+            runPanic(s);
+        }
+
+    }
+}
+
+function otra_asig(sx) {
+    if (ret_curr()[2] != sx) {
+        if (simbolo_s()) {
+            asignacion(sx);
+        } else {
+            runPanic(sx);
+        }
+    }
+}
+
+function simbolo_s() {
+    var combo = ["+", "-", "*", "/", "++", "--"];
+    var n = combo.includes(ret_curr()[2]);
+    return n;
+}
+
+function if_ext() {//dep
+    if (ret_curr()[2] == "else" && calc_nxt()[2] == "if") {
+        nxt();
+        if (ret_curr()[2] == "(") {
+            nxt();
+            cond_f2();
+            //nxt();
+            if (ret_curr()[2] == ")") {
+                nxt();
+                if (ret_curr()[2] == "{") {
+                    nxt();
+                    sentencias();
+                    //nxt();
+                    if (ret_curr()[2] == "}") {
+                        nxt();
+                        //cond_f2();
+                        if_ext();
+                    } else {
+                        runPanic("}");
+                    }
+                } else {
+                    runPanic();
+                }
+            }
+        }
+    } else if (ret_curr()[2] == "else") {
+        nxt();
+        if (ret_curr()[2] == "{") {
+            nxt();
+            sentencias();
+            nxt();
+            if (ret_curr()[2] == "}") {
+                nxt();
+                //cond_f2();
+                //if_ext();
+                nxt();
+                sentencias();
+            } else {
+                runPanic("}");
+            }
+        } else {
+            runPanic();
+        }
+    } else {
+        //no hay error, solo regresamos a las demas instrucciones
+        sentencias();
+        //sin nxt
+    }
 
 }
 
 function cond_f2() {
 
-    if(e1()){
+    if (e1()) {
         nxt();
-        if(combo_c()){
+        if (combo_c()) {
             nxt();
-            if(e1()){
-
+            if (e1()) {
+                nxt();
+                cond_2();
             }
-        }else{
+        } else {
             runPanic(")");
         }
-    }else{
+    } else if (ret_curr()[2] == "true" || ret_curr()[2] == "false") {
+        nxt();
+        cond_2();
+    } else {
         runPanic(")");
     }
 }
+function cond_2() {
 
-function combo_c(){
+    if (ret_curr()[2] != ")") {
+        if (ret_curr()[2] == "&&") {
+            cond_f2();
+        } else if (ret_curr()[2] == "||") {
+            cond_f2();
+        } else {
+            runPanic(")");
+        }
+    }
+
+
+}
+
+
+function combo_c() {
     var combo = ["&&", "!=", "||", ">=", "<=", ">", "<", "=="];
     var n = combo.includes(z + "");
     return n;
@@ -233,48 +747,146 @@ function e1() {
     var e = ret_curr();
     var u = false;
     if (e[1] == "Identificador") {
-        u=true;
+        u = true;
         //nxt();
-        if(calc_nxt()[2]=="("){
+        if (calc_nxt()[2] == "(") {
             nxt();
             //llamar params especiales
-            if(ret_curr()[2]==")"){
-                u=true;
-            }else{
+            if (ret_curr()[2] == ")") {
+                u = true;
+            } else {
                 runPanic();
             }
-        }else{
+        } else {
             //runPanic("");
             //reporta pero sin panico
         }
     } else if (e[1] == "Numero") {
-        u=true;
+        u = true;
     } else if (e[1] == "Cadena 1" || e[1] == "Cadena 1") {
-        u=true;
+        u = true;
     }
     return u;
 }
 
 
-function sentencias_func() {
-
-}
-
 function sentencias_sw() {
 
+    if (ret_curr()[2] == "}") {
+        if (ret_curr()[2] == "case") {
+            nxt();
+            if (e3()) {
+                nxt();
+                if (ret_curr()[2] == ":") {
+                    nxt();
+                    inst_sw();
+                    if (ret_curr()[2] == ":") {
+                        nxt();
+                        if (ret_curr()[2] == "break") {
+                            if (ret_curr()[2] == ";") {
+                                nxt();
+                                sentencias_sw();
+
+                            } else {
+                                runPanic("}")
+                            }
+                        } else {
+                            runPanic("}")
+                        }
+                    } else {
+                        runPanic("}")
+                    }
+                } else {
+                    runPanic("}")
+                }
+            } else {
+                runPanic("}")
+            }
+        } else if (ret_curr()[2] == "default") {
+            nxt();
+            if (ret_curr()[2] == ":") {
+                nxt();
+                inst_sw();
+                if (ret_curr()[2] == ":") {
+                    nxt();
+                    if (ret_curr()[2] == "break") {
+                        if (ret_curr()[2] == ";") {
+                            nxt();
+                            sentencias_sw();
+
+                        } else {
+                            runPanic("}")
+                        }
+                    } else {
+                        runPanic("}")
+                    }
+                } else {
+                    runPanic("}")
+                }
+            } else {
+                runPanic("}")
+            }
+        }
+    }
+
+
 }
 
-function sentencias_ciclo() {
+function e3() {
+    if (ret_curr()[1] == "Numero") {
+        return true;
+    } else if (ret_curr()[1] == "Cadena 1") {
+        return true;
+    }
+    else if (ret_curr()[1] == "Cadena 2") {
+        return true;
+    } else if (ret_curr()[1] == "Identificador") {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+function inst_sw() {
+    if (ret_curr()[2] == "}") {
+        if (ret_curr()[1] == "Identificador") {
+            nxt();
+            if (ret_curr()[2] == "=") {
+                nxt();
+                if (ret_curr()[1] == "Numero" || ret_curr()[1] == "Cadena 1" || ret_curr()[1] == "Cadena 2") {
+                    nxt();
+                    if (ret_curr()[2] == ";") {
+                        nxt();
+                        inst_sw();
+                    } else {
+                        runPanic("}")
+                    }
+                } else {
+                    runPanic("}")
+                }
+            } else {
+                runPanic("}")
+            }
+        } else {
+            runPanic("}")
+        }
+    }
+
 
 }
 
 
 function params() {
     if (ret_curr()[2] != ")") {//puede que exista sin parametros
-        if (isType(ret_curr[2])) {
+        if (isType(ret_curr()[2])) {
+            b = ret_curr()[2];
+
             nxt();
-            if (ret_curr() == "Identificador") {
+            if (ret_curr()[2] == "Identificador") {
                 //crea var
+                a=ret_curr()[2];
+                c=ret_curr()[3];
+                ap_var(a,b,c);
                 nxt();
                 otros_params();
             } else {
@@ -297,7 +909,18 @@ function otros_params() {
     }
 }
 
-
+function rec_html(){
+    for (let i = 0; i < tokx.length; i++) {
+        
+        if(tokx[i][1]=="Cadena 2"){
+            if(tokx[i][1].length>1){
+                var l =tokx[i][1];
+                ht.push(l);
+            }
+        }
+        
+    }
+}
 
 
 
@@ -317,16 +940,29 @@ function isComboAu(z) {
 
 function runPanic(delim) {
     let c = ret_curr();
+    //porta error
+    err(delim);
     while (true) {
         c = ret_curr();
         if (c[2] == "delim") {
             break;
         } else {
-            nxt();
+            //nxt();
+            if (t == tokx.length - 1) {
+                break;
+            } else {
+                nxt();
+            }
         }
     }
 }
 //fin ut
+
+function err(qt) {
+    var ttt = ret_curr();
+    let x = require('./intern.js');
+    x.lst.er_tokens("Sintactico", ttt[3], ttt[4], "Valor inesperado -> " + ttt[2] + " recuperacion: " + qt);
+}
 
 function calc_nxt() {
     return tokx[t + 1];
@@ -343,10 +979,26 @@ function ret_curr() {
 }
 
 function nxt() {
-    t++;
-    //return tokx[t];
+    if (t != tokx.length - 1) {
+        t++;
+        if (ret_curr()[1] == "Comentario") {
+            for (let i = t; i < tokx.length; i++) {
+                //
+                if (ret_curr()[1] == "Cometario") {
+                    t++;
+                } else {
+                    break;
+                }
+
+            }
+        }
+    }
 }
 
+function ap_var(nm, tip, ln) {
+    let u = [nm, tip, ln];
+    vars.push(u);
+}
 
 module.exports = {
     start_x,
