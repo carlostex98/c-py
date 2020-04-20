@@ -4,6 +4,8 @@ let vars = [];
 let tokx = [];
 let ht = [];
 
+var p=false;
+
 var a = "";
 var b = "";
 var c = "";
@@ -34,15 +36,22 @@ function sum(f) {
 }
 
 function adl() {
-    var pu = ident + tmp;
-    py.push("pu");
+    var pu = ident + tmp+" \n";
+    tmp="";
+    py.push(pu);
 }
 
 var t = 0;
 function main_x() {
+    py=[];
+    vars=[];
+    ht=[];
     fill_arr();
     rec_html();
+    //console.log(tokx.length);
     i();
+    //lst_var();
+    //lst_py();
 
 }
 //analizador
@@ -50,12 +59,12 @@ function main_x() {
 function i() {
     if (t != tokx.length - 1) {
         let x = ret_curr();
-        if (x[2] == "void ") {
-            sum("def");
+        if (x[2] == "void") {
+            sum("def ");
             nxt();
             resto();
         } else if (isType(x[2])) {
-            sum("def");
+            sum("def ");
             nxt();
             resto_2();//con return
         } else {
@@ -104,7 +113,7 @@ function resto() {
         }
 
     } else if (a[1] == "Identificador") {// void nombre
-        sum(a[1]);
+        sum(a[2]);
         nxt();
         if (ret_curr()[2] == "(") {
             sum(" (");
@@ -149,13 +158,13 @@ function resto() {
 function resto_2() {
     let a = ret_curr();
     if (a[1] == "Identificador") {
-        sum(a[1]);
+        sum(a[2]);
         nxt();
         if (ret_curr()[2] == "(") {
             sum(" (");
             nxt();
             params();
-            nxt();
+            //nxt();
             if (ret_curr()[2] == ")") {
                 sum("):");
                 adl();
@@ -189,21 +198,6 @@ function resto_2() {
 
 
 function sentencias(n, m) {
-    /*
-    *Opciones:
-    *if
-    * while -brk -cont
-    * do-while -brk -cont
-    * for
-    * switch 
-    * 
-    * var
-    * return --only func
-    * print
-    * 
-    * 
-    */
-
     if (ret_curr()[2] != "}") {
         if (ret_curr()[2] == "if") {
 
@@ -365,15 +359,19 @@ function sentencias(n, m) {
                             sentencias(n, m);
                         } else {
                             runPanic("}");
+                            //console.log("p");
                         }
                     } else {
                         runPanic("}");
+                        //console.log("p1");
                     }
                 } else {
                     runPanic("}");
+                    //console.log("2");
                 }
             } else {
                 runPanic("}");
+                //console.log("p3");
             }
 
         } else if (ret_curr()[2] == "do") {
@@ -401,14 +399,22 @@ function sentencias(n, m) {
                             cln();
                             if (ret_curr()[2] == ")") {
                                 nxt();
-                                sentencias(n, m);
+                                if(ret_curr()[2]==";"){
+                                    nxt();
+                                    sentencias(n, m);
+                                }else{
+                                    runPanic(")");
+                                }
+                                
                             } else {
                                 runPanic(")");
                             }
                         } else {
                             runPanic(")");
                         }
-                    } elserunPanic(")");
+                    } else{
+                        runPanic(")");
+                    } 
                 } else {
                     runPanic(")");
                 }
@@ -459,8 +465,9 @@ function sentencias(n, m) {
                 a = ret_curr()[2];
                 sum(a + " ");
                 nxt();
-                if (v2(w)) {
-                    nxt();
+                v2();
+                if (p) {
+                    //nxt();
                     asignacion(";");
                     if (ret_curr()[2] == ";") {
                         nxt();
@@ -468,15 +475,18 @@ function sentencias(n, m) {
                         sentencias(n, m);
                     } else {
                         runPanic("}");
+                        console.log("jj");
                     }
                 } else {
                     runPanic(";");
+                    console.log("jjx");
                 }
 
 
 
             } else {
                 runPanic(";");
+                console.log("jzj");
             }
 
         } else if (ret_curr()[1] == "Identificador") {
@@ -520,7 +530,7 @@ function sentencias(n, m) {
 
         } else if (n == 1 || m == 1) {
 
-            if (n1 == 1) {
+            if (n == 1) {
                 if (ret_curr()[2] == "return") {
                     sum("return ");
                     nxt();
@@ -569,7 +579,7 @@ function sentencias(n, m) {
     }
 }
 
-function v2(n) {
+function v2() {
 
     if (!isLast()) {
         if (ret_curr()[2] == ",") {
@@ -582,20 +592,18 @@ function v2(n) {
                 sum(ret_curr()[2]);
                 a = ret_curr()[2];
                 nxt();
-                if (v2(n)) {
-
-                }
-
+                v2(); 
             } else {
-                return false;
+                p=false;
             }
         } else if (ret_curr()[2] == "=") {
             sum("=");
             c = ret_curr()[3];
             ap_var(a, b, c);
-            return true;
+            nxt();
+            p= true;
         } else {
-            return false;
+            p= false;
         }
     }
 
@@ -648,7 +656,7 @@ function asignacion(s) {//okx
             nxt();
             otra_asig(s);
         } else if (ret_curr()[1] = "Cadena 1") {
-            sum(ret_curr()[2]);
+            sum("\'"+ret_curr()[2]+"\'");
             nxt()
             otra_asig(s);
         } else if (ret_curr()[1] = "Cadena 2") {
@@ -772,12 +780,16 @@ function isLast() {
 function cond_f2() {
     if (ret_curr()[2] != ")") {
         asig2();
-        nxt();
-
+        //nxt();
+        
         if (combo_c()) {
+            
+            
             sum(ret_curr()[2]);
             nxt();
+            
             asig3();
+            //console.log(ret_curr());
             cond_2();
         }
 
@@ -789,8 +801,10 @@ function cond_2() {
     if (ret_curr()[2] != ")") {
         if (ret_curr()[2] == "&&") {
             sum(" "+ret_curr()[2]+" ");
+            nxt();
             cond_f2();
         } else if (ret_curr()[2] == "||") {
+            nxt();
             cond_f2();
             sum(" "+ret_curr()[2]+" ");
         }
@@ -802,7 +816,7 @@ function cond_2() {
 
 function combo_c() {
     var combo = ["&&", "!=", "||", ">=", "<=", ">", "<", "=="];
-    var n = combo.includes(z + "");
+    var n = combo.includes(ret_curr()[2]);
     return n;
 }
 
@@ -820,7 +834,8 @@ function e2() {
 
 function otra_asig2() {//okx
     if (!e1()) {
-        if (simbolo_s()) {
+        
+        if (combo_c()) {
             sum(ret_curr()[2]);
             nxt();
             asig2();
@@ -830,7 +845,7 @@ function otra_asig2() {//okx
 
 function otra_asig3() {//okx
     if (!e2()) {
-        if (simbolo_s()) {
+        if (combo_c()) {
             sum(ret_curr()[2]);
             nxt();
             asig3();
@@ -864,7 +879,7 @@ function asig2() {
             otra_asig2();
         } else if (ret_curr()[1] = "Cadena 1") {
             sum(ret_curr()[2]);
-            nxt()
+            nxt();
             otra_asig2();
         } else if (ret_curr()[1] = "Cadena 2") {
             sum(ret_curr()[2]);
@@ -910,7 +925,7 @@ function asig3() {
                     nxt();
                     otra_asig3();
                 } else {
-                    runPanic(s);
+                    runPanic(")");
                 }
             } else {
                 otra_asig3();
@@ -1074,7 +1089,8 @@ function params() {//okx
             b = ret_curr()[2];
 
             nxt();
-            if (ret_curr()[2] == "Identificador") {
+            //console.log(ret_curr());
+            if (ret_curr()[1] == "Identificador") {
                 //crea var
                 sum(ret_curr()[2]);
                 a = ret_curr()[2];
@@ -1083,17 +1099,19 @@ function params() {//okx
                 nxt();
                 otros_params();
             } else {
+                //console.log("jxxxj");
                 runPanic(")");
             }
         } else {
-            runPanic(")");
+            //runPanic(")");
+            console.log("jzaj");
         }
     }
 }
 
 function otros_params() {//okx
     if (ret_curr()[2] != ")") {//epsilon
-        if (ret_curr() == ",") {
+        if (ret_curr()[2] == ",") {
             sum(", ");
             nxt();
             params();
@@ -1194,7 +1212,41 @@ function ap_var(nm, tip, ln) {
     vars.push(u);
 }
 
+function lst_var(){
+    for (let i = 0; i < vars.length; i++) {
+        console.log(vars[i]);
+    }
+}
+
+function lst_py(){
+    for (let i = 0; i < py.length; i++) {
+        console.log(py[i]);
+    }
+}
+
+function ret_py(){
+    var pypy="";
+    for (let i = 0; i < py.length; i++) {
+        pypy+=py[i];
+    }
+    return pypy;
+}
+
+function ret_html(){
+    var pypy="";
+    for (let i = 0; i < ht.length; i++) {
+        pypy+=ht[i];
+    }
+    return pypy;
+}
+function ret_var(){
+    return vars;
+}
+
+
 module.exports = {
     main_x,
-    vars
+    ret_var,
+    ret_html,
+    ret_py
 };

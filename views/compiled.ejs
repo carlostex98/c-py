@@ -93,8 +93,59 @@
         </div>
 
         <div id="Tokyo" class="w3-container city" style="display:none">
-            <h2>Tokyo</h2>
-            <p>Tokyo is the capital of Japan.</p>
+            <div>
+                <h2>Variables</h2>
+                <table class="w3-table w3-striped w3-border">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Linea</th>
+                        
+                    </tr>
+    
+                    <% variables.forEach(function(ert){ %>
+                        <tr>
+                            <td><%= ert[0]%></td>
+                            <td><%= ert[1]%></td>
+                            <td><%= ert[2]%></td>
+                            
+                        </tr>
+    
+                    <% })%>
+                        
+                </table>
+            </div>
+
+            <br>
+            <br>
+            <div>
+                <h2>Codigo Python</h2>
+                <div class="w3-code">
+                    <textarea class="w3-input w3-border w3-light-gray" style="height: 600px;" name="texto"
+                        id="texto" readonly ><%= python%></textarea>
+                    
+                </div>
+            </div>
+
+
+            <br>
+            <br>
+            <div>
+                <h2>Codigo HTML</h2>
+                <div class="w3-code">
+                    <%= ht%>
+                </div>
+            </div>
+
+
+            <br>
+            <br>
+            <div>
+                <h2>JSON</h2>
+                <div class="w3-code">
+                    none
+                </div>
+            </div>
         </div>
     </div>
 

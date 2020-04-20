@@ -30,10 +30,16 @@ app.post('/', function (req, res) {
 app.get('/compiled', function (req, res) {
     let tokk=ix.lst.ret_arr();
     let erx=ix.lst.ret_err();
+    let varx=ix.sintax.ret_var();
+    let pyx=ix.sintax.ret_py();
+    let htx=ix.sintax.ret_html();
 
     res.render('compiled.ejs',{
         tokens : tokk,
-        errores: erx
+        errores: erx,
+        variables: varx,
+        python: pyx,
+        ht: htx
     });
 });
 

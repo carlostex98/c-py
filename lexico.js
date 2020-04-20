@@ -49,7 +49,7 @@ function lex_x(cadena) {
                         ltt.lst.add_token("Simbolo", c, ln, cl);
                     }
                 } else if (c != '\n' && c != " " && c != "\t" && c != '\r') {
-
+                    console.log(b);
                     ltt.lst.er_tokens("lexico", ln, cl, "valor inesperado: " + c);
                 } else {
 
@@ -180,7 +180,7 @@ function isNum(z) {
 }
 
 function isSimbol(z) {
-    var sim = ["=", ",", "*", "-", "(", ")", "{", "}", ";", "+", "-", "*", "/", "<", ">", ":", "!", "."];
+    var sim = ["=", ",", "*", "-", "(", ")", "{", "}", ";", "+", "-", "*", "/", "<", ">", ":", "!", ".","&","|"];
     var n = sim.includes(z);
     return n;
 }
