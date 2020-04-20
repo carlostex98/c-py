@@ -193,7 +193,7 @@ function isCombo(z) {
 
 function isReserved(z) {
     var res = ["void", "int", "string", "double", "char", "bool", "main", "Console", "write",
-        "switch", "case", "break", "default", "for", "while", "do", "return", "continue"];
+        "switch", "case", "break", "default", "for", "while", "do", "return", "continue","true","false"];
     var n = res.includes(z);
     return n;
 
