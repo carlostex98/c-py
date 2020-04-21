@@ -24,19 +24,23 @@ function lex_x(cadena) {
                 }*/
 
                 if (c == '/' && v == '/') {
-
+                    i++;
+                    cl++;
                     e = 1;  //ok
                 } else if (c == '/' && v == '*') {
                     e = 2;  //ok
-
+                    i++;
+                    cl++;
                 } else if (isLetter(c) || c == '_') {
                     e = 3; //ok
                     aux += c;
                 } else if (isNum(c)) {
+                    
                     e = 4
                     aux += c;  //ok
                 } else if (c == '\"') {
                     e = 7; //ok
+                    //console.log("s");
                 } else if (c == '\'') {
                     e = 8 //ok
                 } else if (isSimbol(c)) {
@@ -49,7 +53,7 @@ function lex_x(cadena) {
                         ltt.lst.add_token("Simbolo", c, ln, cl);
                     }
                 } else if (c != '\n' && c != " " && c != "\t" && c != '\r') {
-                    console.log(b);
+                    //console.log(b);
                     ltt.lst.er_tokens("lexico", ln, cl, "valor inesperado: " + c);
                 } else {
 
@@ -67,8 +71,8 @@ function lex_x(cadena) {
                 break;
 
             case 1:
-                if (c == '\n' || c != '\r') {
-                    ltt.lst.add_token("Comentario", aux, ln, cl - aux.length - 2);
+                if (c == '\n' || c == '\r') {
+                    ltt.lst.add_token("Comentario 1", aux, ln, cl - aux.length - 2);
                     aux = "";
                     e = 0;
                 } else {
@@ -78,9 +82,11 @@ function lex_x(cadena) {
 
             case 2:
                 if (c == "*" && v == "/") {
-                    ltt.lst.add_token("Comentario", aux, ln, cl - aux.length - 4);
+                    ltt.lst.add_token("Comentario 2", aux, ln, cl - aux.length - 4);
                     aux = "";
                     e = 0;
+                    i++;
+                    cl++;
                 } else {
                     aux += c;
                 }
@@ -96,7 +102,7 @@ function lex_x(cadena) {
                     } else {
                         ltt.lst.add_token("Identificador", aux, ln, cl - aux.length);
                     }
-                    e = 0
+                    e = 0;
                     i--;
                     cl--;
                     aux = "";
@@ -111,7 +117,7 @@ function lex_x(cadena) {
                     aux += c;
                 } else {
                     ltt.lst.add_token("Numero", aux, ln, cl - aux.length);
-                    e = 0
+                    e = 0;
                     i--;
                     cl--;
                     aux = "";
@@ -124,7 +130,7 @@ function lex_x(cadena) {
 
                 } else {
                     ltt.lst.add_token("Numero", aux, ln, cl - aux.length);
-                    e = 0
+                    e = 0;
                     i--;
                     cl--;
                     aux = "";
@@ -135,8 +141,10 @@ function lex_x(cadena) {
                 if (c == '\"') {
                     //reporta
                     ltt.lst.add_token("Cadena 1", aux, ln, cl - aux.length - 2);
-                    e = 0
+                    //let yp = ltt.lst.ret_arr();
 
+                    e = 0;
+                    //console.log(yp[yp.length-1]);
                     aux = "";
 
                 } else {
@@ -147,7 +155,7 @@ function lex_x(cadena) {
             case 8:
                 if (c == '\'') {
                     ltt.lst.add_token("Cadena 2", aux, ln, cl - aux.length - 2);
-                    e = 0
+                    e = 0;
 
                     aux = "";
 
@@ -192,7 +200,7 @@ function isCombo(z) {
 }
 
 function isReserved(z) {
-    var res = ["void", "int", "string", "double", "char", "bool", "main", "Console", "write",
+    var res = ["void", "int", "string", "double", "char", "bool", "main", "Console", "Write",
         "switch", "case", "break", "default", "for", "while", "do", "return", "continue","true","false"];
     var n = res.includes(z);
     return n;
