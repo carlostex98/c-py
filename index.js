@@ -1,8 +1,12 @@
 var express = require('express');
+var formidable = require('formidable'); 
 var app = express();
 const bodyParser = require('body-parser');
 var fs = require('fs');
 var htmlToJson = require('html-to-json'); 
+const fileUpload = require('express-fileupload');
+
+app.use(fileUpload());
 //otro config
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -14,12 +18,52 @@ app.set('view engine', 'ejs');
 
 let ix = require('./intern.js');
 var xm = "";
+var sd=0;
+let fls=[];
+
 
 //rutas
 app.get('/', function (req, res) {
+    if(fls.length==0){
+        var t=[fls.length+"","default",""];
+        fls.push(t);
+    }
     res.render('index.ejs', {
-        super_s: null
+        texto: fls[sd][2],
+        pp:fls,
+        tit:fls[sd][1]
+
     });
+});
+
+app.get('/o/:tt', function (req, res) {
+    var e=req.params.tt;
+    sd=e;
+    res.redirect('/');
+});
+
+app.get('/nuevo', function (req, res) {
+    if(fls[fls.length-1][1]!="default"){
+        var t=[fls.length+"","default",""];
+        fls.push(t);
+        sd=fls.length-1;
+    }
+    
+    res.redirect('/');
+});
+
+app.post('/upl', function (req, res) {
+    //console.log(req.files.foo.data.toString('utf8'));
+    if(fls[fls.length-1][2]==""){
+        var t=[fls.length-1+"",req.files.foo.name,req.files.foo.data.toString('utf8')];
+        fls[fls.length-1]=t;
+        sd=fls.length-1;
+    }else{
+        var t=[fls.length+"",req.files.foo.name,req.files.foo.data.toString('utf8')];
+        sd=fls.length-1;
+        fls.push(t);
+    }
+    res.redirect("/");
 });
 
 app.post('/', function (req, res) {

@@ -28,17 +28,21 @@
     <div class="w3-padding-48 w3-content">
         <div class="w3-card-4">
             <div class="w3-bar w3-black">
-                <a href="#" class="w3-bar-item w3-button">London</a>
-                <a href="#" class="w3-bar-item w3-button">Paris</a>
-                <a href="#" class="w3-bar-item w3-button w3-right">Tokyo</a>
-              </div>
+                
+                <% pp.forEach(function(token){ %>
+                    <div class="w3-bar-item w3-hover-red"> <a href="/o/<%= token[0]%>"><%= token[1]%></a> </div>
+
+                <% })%>
+                <a href="/nuevo" class="w3-bar-item w3-button w3-right w3-red">Nueva pestaña</a>
+            </div>
             <div class="w3-container w3-teal">
-                <h2>C# -> Python</h2>
+                <h2><%= tit%></h2>
             </div>
 
             <div class="w3-container">
                 <br>
-                <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Abrir archivo</button>
+                <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Abrir
+                    archivo</button>
 
                 <div id="id01" class="w3-modal">
                     <div class="w3-modal-content">
@@ -46,7 +50,10 @@
                             <span onclick="document.getElementById('id01').style.display='none'"
                                 class="w3-button w3-display-topright">&times;</span>
                             <h2>Selecciona el Archivo</h2>
-                            <p>k</p>
+                            <form method="post" action="/upl" encType="multipart/form-data">
+                                <input name="foo" type="file" />><br>
+                                <input type="submit">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -58,16 +65,14 @@
                     <label class=""><b>El codigo</b></label>
 
                     <textarea class="w3-input w3-border w3-light-gray" style="height: 600px;" name="texto"
-                        id="texto"></textarea>
+                        id="texto"><%= texto%></textarea>
                 </p>
 
                 <p>
                     <button class="w3-btn w3-teal" type="submit">Compilar</button>
                 </p>
             </form>
-            <% if(super_s!=null){ %>
-            <div class="w3-code"> Archivo compilado</div>
-            <%}%> 
+            
     
     
         </div>
