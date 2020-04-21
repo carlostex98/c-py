@@ -1,7 +1,8 @@
 var express = require('express');
 var app = express();
 const bodyParser = require('body-parser');
-var fs = require('fs'); 
+var fs = require('fs');
+var htmlToJson = require('html-to-json'); 
 //otro config
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,7 +34,7 @@ app.get('/compiled', function (req, res) {
     let varx = ix.sintax.ret_var();
     let pyx = ix.sintax.ret_py();
     let htx = ix.sintax.ret_html();
-    xm=mapDOM(htx);
+    ch(htx);
     zzz(pyx, htx, xm);
     res.render('compiled.ejs', {
         tokens: tokk,
@@ -41,7 +42,7 @@ app.get('/compiled', function (req, res) {
         variables: varx,
         python: pyx,
         ht: htx,
-        supjsx: xm
+        superjsx: xm
     });
 });
 
@@ -54,7 +55,7 @@ function zzz(c_py, c_ht, c_js){
         if (err) throw err;
         //console.log('Saved!');
     });
-    fs.writeFile('./public/rec_json.json', c_py, function (err) {
+    fs.writeFile('./public/rec_json.json', c_js, function (err) {
         if (err) throw err;
         //console.log('Saved!');
     });
@@ -67,57 +68,26 @@ app.listen(app.get('port'), function () {
 
 
 
-
-
-
-
-
-function mapDOM(element, json) {
-    var treeObject = {};
-
-    // If string convert to document Node
-    if (typeof element === "string") {
-        if (window.DOMParser) {
-            parser = new DOMParser();
-            docNode = parser.parseFromString(element, "text/xml");
-        } else { // Microsoft strikes again
-            docNode = new ActiveXObject("Microsoft.XMLDOM");
-            docNode.async = false;
-            docNode.loadXML(element);
+function ch(opu){
+    var promise = htmlToJson.parse(opu, {
+        'text': function ($doc) {
+          return $doc.find('html').text();
         }
-        element = docNode.firstChild;
-    }
-
-    //Recursively loop through DOM elements and assign properties to object
-    function treeHTML(element, object) {
-        object["type"] = element.nodeName;
-        var nodeList = element.childNodes;
-        if (nodeList != null) {
-            if (nodeList.length) {
-                object["content"] = [];
-                for (var i = 0; i < nodeList.length; i++) {
-                    if (nodeList[i].nodeType == 3) {
-                        object["content"].push(nodeList[i].nodeValue);
-                    } else {
-                        object["content"].push({});
-                        treeHTML(nodeList[i], object["content"][object["content"].length - 1]);
-                    }
-                }
-            }
-        }
-        if (element.attributes != null) {
-            if (element.attributes.length) {
-                object["attributes"] = {};
-                for (var i = 0; i < element.attributes.length; i++) {
-                    object["attributes"][element.attributes[i].nodeName] = element.attributes[i].nodeValue;
-                }
-            }
-        }
-    }
-    treeHTML(element, treeObject);
-
-    return (json) ? JSON.stringify(treeObject) : treeObject;
+      }, function (err, result) {
+          xm=result;
+        //console.log(result);
+      });
+       
+      promise.done(function (result) {
+        //Works as well
+      });
 }
+
+
+
+
+
+
 
 
 

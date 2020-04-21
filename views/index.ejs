@@ -8,7 +8,7 @@
     <title>C# to Python</title>
 </head>
 
-<body >
+<body>
     <div class="w3-top">
         <div class="w3-bar w3-white w3-wide w3-padding w3-card">
             <a href="" class="w3-bar-item w3-button"><b>C#</b> / <b>Python</b></a>
@@ -23,21 +23,44 @@
 
 
     <br>
-    
+
 
     <div class="w3-padding-48 w3-content">
-        <div class="w3-card-4" >
+        <div class="w3-card-4">
+            <div class="w3-bar w3-black">
+                <a href="#" class="w3-bar-item w3-button">London</a>
+                <a href="#" class="w3-bar-item w3-button">Paris</a>
+                <a href="#" class="w3-bar-item w3-button w3-right">Tokyo</a>
+              </div>
             <div class="w3-container w3-teal">
                 <h2>C# -> Python</h2>
             </div>
+
+            <div class="w3-container">
+                <br>
+                <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Abrir archivo</button>
+
+                <div id="id01" class="w3-modal">
+                    <div class="w3-modal-content">
+                        <div class="w3-container">
+                            <span onclick="document.getElementById('id01').style.display='none'"
+                                class="w3-button w3-display-topright">&times;</span>
+                            <h2>Selecciona el Archivo</h2>
+                            <p>k</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <form class="w3-container" method="POST" action="/">
                 <p>
                     <label class=""><b>El codigo</b></label>
-    
+
                     <textarea class="w3-input w3-border w3-light-gray" style="height: 600px;" name="texto"
                         id="texto"></textarea>
                 </p>
-    
+
                 <p>
                     <button class="w3-btn w3-teal" type="submit">Compilar</button>
                 </p>
