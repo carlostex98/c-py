@@ -35,6 +35,10 @@ app.get('/', function (req, res) {
 
     });
 });
+app.get('/doc', function (req, res) {
+    
+    res.render('doc.ejs');
+});
 
 app.get('/o/:tt', function (req, res) {
     var e=req.params.tt;

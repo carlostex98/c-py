@@ -298,13 +298,16 @@ function sentencias(n, m) {
                         runPanic("}");
                     }
                     if (ret_curr()[2] == "=") {
+                        sum(ret_curr()[2]);
                         nxt();
+
                         asignacion(";");
                         if (ret_curr()[2] == ";") {
                             nxt();
                             sum(" in range( ");
                             cond_f2();//suma coond
                             if (ret_curr()[2] == ";") {
+                                sum(ret_curr()[2]);
                                 nxt();
                                 asignacion(")");
                                 if (ret_curr()[2] == ")") {
@@ -614,7 +617,10 @@ function v2() {
                 p = false;
             }
         } else if (ret_curr()[2] == "=" || ret_curr()[2] == ";") {
-            sum(ret_curr()[2]);
+            if(ret_curr()[2] == "="){
+                sum(ret_curr()[2]);
+            }
+            
             c = ret_curr()[3];
             ap_var(a, b, c);
             //nxt();
@@ -1347,7 +1353,7 @@ function nxt() {
                 //console.log("yes");
                 if (ret_curr()[1] == "Comentario 1" || ret_curr()[1] == "Comentario 2") {
                     if (ret_curr()[1] == "Comentario 1") {
-                        sum("# " + ret_curr()[2]);
+                        sum("      # " + ret_curr()[2]);
                         adl();
                     } else {
                         sum("''' " + ret_curr()[2] + " '''");
